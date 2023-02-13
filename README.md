@@ -565,8 +565,24 @@ expert.getDescription();
 
 <div dir="ltr">
 
-```python
-def __init__(self, size, cheese=True, pepperoni=True, tomato=False, lettuce=True)
+```c#
+public class Pizza
+{
+    public int size;
+    public bool cheese;
+    public bool pepperoni;
+    public bool tomato;
+    public bool lettuce;
+
+    public Pizza(int size, bool cheese = true, bool pepperoni = true, bool tomato = false, bool lettuce = true)
+    {
+        size = size;
+        cheese = cheese;
+        pepperoni = pepperoni;
+        tomato = tomato;
+        lettuce = lettuce;
+    }
+}
 ```
 
 </div>
@@ -594,21 +610,25 @@ def __init__(self, size, cheese=True, pepperoni=True, tomato=False, lettuce=True
 
 <div dir="ltr">
 
-```python
-class Burger:
-    _size = None
+```c#
+class Burger
+{
+    private int _size;
 
-    _cheese = False
-    _pepperoni = False
-    _lettuce = False
-    _tomato = False
+    private bool _cheese;
+    private bool _pepperoni;
+    private bool _lettuce;
+    private bool _tomato;
 
-    def __init__(self, builder):
-        self._size = builder.size
-        self._cheese = builder.cheese
-        self._pepperoni = builder.pepperoni
-        self._lettuce = builder.lettuce
-        self._tomato = builder.tomato
+    public Burger(Builder builder)
+    {
+        _size = builder.Size;
+        _cheese = builder.Cheese;
+        _pepperoni = builder.Pepperoni;
+        _lettuce = builder.Lettuce;
+        _tomato = builder.Tomato;
+    }
+}
 ```
 
 </div>
@@ -617,36 +637,50 @@ class Burger:
 
 <div dir="ltr">
 
-```python
-class BurgerBuilder:
-    size = None
+```c#
+class BurgerBuilder
+{
+    public int? Size { get; set; }
 
-    cheese = False
-    pepperoni = False
-    lettuce = False
-    tomato = False
+    public bool Cheese { get; set; }
+    public bool Pepperoni { get; set; }
+    public bool Lettuce { get; set; }
+    public bool Tomato { get; set; }
 
-    def __init__(self, size):
-        self.size = size
+    public BurgerBuilder(int size)
+    {
+        Size = size;
+    }
 
-    def addPepperoni(self):
-        self.pepperoni = True
-        return self
+    public BurgerBuilder AddPepperoni()
+    {
+        Pepperoni = true;
+        return this;
+    }
 
-    def addLettuce(self):
-        self.lettuce = True
-        return self
+    public BurgerBuilder AddLettuce()
+    {
+        Lettuce = true;
+        return this;
+    }
 
-    def addCheese(self):
-        self.cheese = True
-        return self
+    public BurgerBuilder AddCheese()
+    {
+        Cheese = true;
+        return this;
+    }
 
-    def addTomato(self):
-        self.tomato = True
-        return self
+    public BurgerBuilder AddTomato()
+    {
+        Tomato = true;
+        return this;
+    }
 
-    def build(self):
-        return Burger(self)
+    public Burger Build()
+    {
+        return new Burger(this);
+    }
+}
 ```
 
 </div>
@@ -654,10 +688,15 @@ class BurgerBuilder:
 روش استفاده از کلاس Builder هم به این صورت هست:
 <div dir="ltr">
 
-```python
-burger = BurgerBuilder(10).addPepperoni().addLettuce().addTomato().build()
+```c#
+var burger = new BurgerBuilder(10)
+    .AddPepperoni()
+    .AddLettuce()
+    .AddTomato()
+    .Build();
 
-print(vars(burger))
+Console.WriteLine(burger);
+
 ```
 
 </div>
