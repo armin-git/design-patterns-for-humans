@@ -388,20 +388,29 @@ marketingManager.takeInterview();
 اول باید اینترفیس درب رو بسازیم و چند پیاده‌سازی ازش ایجاد کنیم :
 <div dir="ltr">
 
-```python
-class Door:
-    def getDescription(self):
-        pass
+```c#
+class Door
+{
+    public virtual void getDescription()
+    {
+    }
+}
 
+class WoodenDoor : Door
+{
+    public override void getDescription()
+    {
+        Console.WriteLine("I am a wooden door");
+    }
+}
 
-class WoodenDoor(Door):
-    def getDescription(self):
-        print('I am a wooden door')
-
-
-class IronDoor(Door):
-    def getDescription(self):
-        print('I am an iron door')
+class IronDoor : Door
+{
+    public override void getDescription()
+    {
+        Console.WriteLine("I am an iron door");
+    }
+}
 ```
 
 </div>
@@ -410,20 +419,29 @@ class IronDoor(Door):
 
 <div dir="ltr">
 
-```python
-class DoorFittingExpert:
-    def getDescription(self):
-        pass
+```c#
+class DoorFittingExpert
+{
+    public virtual void getDescription()
+    {
+    }
+}
 
+class Welder : DoorFittingExpert
+{
+    public override void getDescription()
+    {
+        Console.WriteLine("I can only fit iron doors");
+    }
+}
 
-class Welder(DoorFittingExpert):
-    def getDescription(self):
-        print('I can only fit iron doors')
-
-
-class Carpenter(DoorFittingExpert):
-    def getDescription(self):
-        print('I can only fit wooden doors')
+class Carpenter : DoorFittingExpert
+{
+    public override void getDescription()
+    {
+        Console.WriteLine("I can only fit wooden doors");
+    }
+}
 ```
 
 </div>
@@ -438,29 +456,45 @@ class Carpenter(DoorFittingExpert):
 
 <div dir="ltr">
 
-```python
-class DoorFactory:
-    def makeDoor(self):
-        pass
+```c#
+class DoorFactory
+{
+    public virtual Door makeDoor()
+    {
+        return null;
+    }
 
-    def makeFittingExpert(self):
-        pass
+    public virtual DoorFittingExpert makeFittingExpert()
+    {
+        return null;
+    }
+}
 
+class WoodenDoorFactory : DoorFactory
+{
+    public override Door makeDoor()
+    {
+        return new WoodenDoor();
+    }
 
-class WoodenDoorFactory(DoorFactory):
-    def makeDoor(self):
-        return WoodenDoor()
+    public override DoorFittingExpert makeFittingExpert()
+    {
+        return new Carpenter();
+    }
+}
 
-    def makeFittingExpert(self):
-        return Carpenter()
+class IronDoorFactory : DoorFactory
+{
+    public override Door makeDoor()
+    {
+        return new IronDoor();
+    }
 
-
-class IronDoorFactory(DoorFactory):
-    def makeDoor(self):
-        return IronDoor()
-
-    def makeFittingExpert(self):
-        return Welder()
+    public override DoorFittingExpert makeFittingExpert()
+    {
+        return new Welder();
+    }
+}
 ```
 
 </div>
@@ -468,24 +502,24 @@ class IronDoorFactory(DoorFactory):
 روش استفاده ازش هم به این صورت هست:
 <div dir="ltr">
 
-```python
-woodenFactory = WoodenDoorFactory()
+```c#
+WoodenDoorFactory woodenFactory = new WoodenDoorFactory();
 
-door = woodenFactory.makeDoor()
-expert = woodenFactory.makeFittingExpert()
+Door door = woodenFactory.makeDoor();
+DoorFittingExpert expert = woodenFactory.makeFittingExpert();
 
-door.getDescription()
-expert.getDescription()
+door.getDescription();
+expert.getDescription();
 
------------------------------------------------
+------------------------------------------------
 
-ironFactory = IronDoorFactory()
+IronDoorFactory ironFactory = new IronDoorFactory();
 
-door = ironFactory.makeDoor()
-expert = ironFactory.makeFittingExpert()
+door = ironFactory.makeDoor();
+expert = ironFactory.makeFittingExpert();
 
-door.getDescription()
-expert.getDescription()
+door.getDescription();
+expert.getDescription();
 ```
 
 </div>
