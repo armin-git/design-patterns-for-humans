@@ -163,28 +163,35 @@
 
 <div dir="ltr">
 
-```python
-class Door:
-    def getWidth(self):
-        pass
+```c#
+abstract class Door
+{
+    public abstract int GetWidth();
+    public abstract int GetHeight();
+}
 
-    def getHeight(self):
-        pass
 
+class WoodenDoor : Door
+{
+    private int width;
+    private int height;
 
-class WoodenDoor(Door):
-    width = None
-    height = None
+    public WoodenDoor(int width = 5, int height = 5)
+    {
+        this.width = width;
+        this.height = height;
+    }
 
-    def __init__(self, width=5, height=5):
-        self.width = width
-        self.height = height
+    public override int GetWidth()
+    {
+        return this.width;
+    }
 
-    def getWidth(self):
-        return self.width
-
-    def getHeight(self):
-        return self.height
+    public override int GetHeight()
+    {
+        return this.height;
+    }
+}
 ```
 
 </div>
@@ -192,11 +199,14 @@ class WoodenDoor(Door):
 و حالا یک کلاس factory برای ساخت درب میسازیم:
 <div dir="ltr">
 
-```python
-class DoorFactory:
-    @staticmethod
-    def makeDoor(width, height):
-        return WoodenDoor(width, height)
+```c#
+class DoorFactory
+{
+    public static Door MakeDoor(int width, int height)
+    {
+        return new WoodenDoor(width, height);
+    }
+}
 ```
 
 </div>
@@ -205,10 +215,10 @@ class DoorFactory:
 
 <div dir="ltr">
 
-```python
-door = DoorFactory.makeDoor(10, 10)
-print(door.getHeight())
-print(door.getWidth())
+```c#
+Door door = DoorFactory.MakeDoor(10, 10);
+Console.WriteLine(door.GetHeight());
+Console.WriteLine(door.GetWidth());
 ```
 
 </div>
