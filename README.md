@@ -620,7 +620,7 @@ class Burger
     private bool _lettuce;
     private bool _tomato;
 
-    public Burger(Builder builder)
+    public Burger(BurgerBuilder builder)
     {
         _size = builder.Size;
         _cheese = builder.Cheese;
@@ -771,12 +771,21 @@ Console.WriteLine(burger);
 
 <div dir="ltr">
 
-```python
-class SomeComponent:
-    def __init__(self, some_int, some_list_of_objects, some_circular_ref):
-        self.some_int = some_int
-        self.some_list_of_objects = some_list_of_objects
-        self.some_circular_ref = some_circular_ref
+```c#
+using System.Collections.Generic;
+
+class SomeComponent {
+    public int SomeInt { get; set; }
+    public List<SomeComponent> SomeListOfObjects { get; set; }
+    public SomeComponent SomeCircularRef { get; set; }
+
+    public SomeComponent(int someInt, List<SomeComponent> someListOfObjects, SomeComponent someCircularRef) {
+        SomeInt = someInt;
+        SomeListOfObjects = someListOfObjects;
+        SomeCircularRef = someCircularRef;
+    }
+}
+
 ```
 
 </div>
@@ -785,26 +794,39 @@ class SomeComponent:
 پایتون magic method‌هایی برای این مساله در نظر گرفته که ماهم از همون دو تابع معروف copy و deep copy استفاده میکنیم:
 <div dir="ltr">
 
-```python
-def __copy__(self):
-    some_list_of_objects = copy.copy(self.some_list_of_objects)
-    some_circular_ref = copy.copy(self.some_circular_ref)
-    new = self.__class__(
-        self.some_int, some_list_of_objects, some_circular_ref
-    )
-    new.__dict__.update(self.__dict__)
-    return new
+```c#
+using System;
+using System.Collections.Generic;
 
+class SomeComponent {
+    public int SomeInt { get; set; }
+    public List<SomeComponent> SomeListOfObjects { get; set; }
+    public SomeComponent SomeCircularRef { get; set; }
 
-def __deepcopy__(self, memo={}):
-    some_list_of_objects = copy.deepcopy(self.some_list_of_objects, memo)
-    some_circular_ref = copy.deepcopy(self.some_circular_ref, memo)
-    new = self.__class__(
-        self.some_int, some_list_of_objects, some_circular_ref
-    )
-    new.__dict__ = copy.deepcopy(self.__dict__, memo)
+    public SomeComponent(int someInt, List<SomeComponent> someListOfObjects, SomeComponent someCircularRef) {
+        SomeInt = someInt;
+        SomeListOfObjects = someListOfObjects;
+        SomeCircularRef = someCircularRef;
+    }
 
-    return new
+    public SomeComponent Copy() {
+        var someListOfObjects = new List<SomeComponent>(SomeListOfObjects);
+        var someCircularRef = SomeCircularRef.Copy();
+        var newComponent = new SomeComponent(SomeInt, someListOfObjects, someCircularRef);
+        return newComponent;
+    }
+
+    public SomeComponent DeepCopy() {
+        var someListOfObjects = new List<SomeComponent>();
+        foreach (var obj in SomeListOfObjects) {
+            someListOfObjects.Add(obj.DeepCopy());
+        }
+        var someCircularRef = SomeCircularRef.DeepCopy();
+        var newComponent = new SomeComponent(SomeInt, someListOfObjects, someCircularRef);
+        return newComponent;
+    }
+}
+
 ```
 
 </div>
