@@ -879,21 +879,37 @@ class SomeComponent {
 ولی توی پایتون راه حل ساده تری وجود داره که اون استفاده از metaclass هاست:
 <div dir="ltr">
 
-```python
-class SingletonMeta(type):
-    _instances = {}
+```c#
+using System;
 
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-        return cls._instances[cls]
+public sealed class Singleton
+{
+    private static Singleton instance = null;
+    private static readonly object padlock = new object();
 
+    private Singleton()
+    {
+    }
 
-class Singleton(metaclass=SingletonMeta):
-    def some_business_logic(self):
-        pass
+    public static Singleton Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new Singleton();
+                }
+                return instance;
+            }
+        }
+    }
 
+    public void SomeBusinessLogic()
+    {
+    }
+}
 
 ```
 
@@ -902,17 +918,54 @@ class Singleton(metaclass=SingletonMeta):
 نحوه فراخوانی هم در این روش تفاوتی نمیکنه:
 <div dir="ltr">
 
-```python
-if __name__ == "__main__":
-    # The client code.
+```c#
+public sealed class Singleton
+{
+    private static Singleton instance = null;
+    private static readonly object lockObject = new object();
 
-    s1 = Singleton()
-    s2 = Singleton()
+    private Singleton() { }
 
-    if id(s1) == id(s2):
-        print("Singleton works, both variables contain the same instance.")
-    else:
-        print("Singleton failed, variables contain different instances.")
+    public static Singleton Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                lock (lockObject)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Singleton();
+                    }
+                }
+            }
+
+            return instance;
+        }
+    }
+}
+ 
+ class Program
+{
+    static void Main(string[] args)
+    {
+        Singleton s1 = Singleton.Instance;
+        Singleton s2 = Singleton.Instance;
+
+        if (Object.ReferenceEquals(s1, s2))
+        {
+            Console.WriteLine("Singleton works, both variables contain the same instance.");
+        }
+        else
+        {
+            Console.WriteLine("Singleton failed, variables contain different instances.");
+        }
+
+        Console.ReadLine();
+    }
+}
+
 ```
 
 </div>
