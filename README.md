@@ -265,21 +265,27 @@ Console.WriteLine(door.GetWidth());
 پس اول یک اینترفیس برای مصاحبه کننده‌ها میسازیم و چند پیاده‌سازی هم برای اون ایجاد می‌کنیم:
 <div dir="ltr">
 
-```python
-class Interviewer:
-    def askQuestions(self):
-        pass
+```c#
+abstract class Interviewer
+{
+    public abstract void AskQuestions();
+}
 
+class Developer : Interviewer
+{
+    public override void AskQuestions()
+    {
+        Console.WriteLine("Asking about design patterns");
+    }
+}
 
-class Developer(Interviewer):
-    def askQuestions(self):
-        print
-        'Asking about design patterns'
-
-
-class CommunityExecutive(Interviewer):
-    def askQuestions(self):
-        print('Asking about community building')
+class CommunityExecutive : Interviewer
+{
+    public override void AskQuestions()
+    {
+        Console.WriteLine("Asking about community building");
+    }
+}
 ```
 
 </div>
@@ -287,15 +293,17 @@ class CommunityExecutive(Interviewer):
 خب حالا `HiringManager` رو میسازیم:
 <div dir="ltr">
 
-```python
-class HiringManager:
-    def makeInterviewer(self):
-        pass
+```c#
+abstract class HiringManager
+{
+    public abstract Interviewer MakeInterviewer();
 
-    def takeInterview(self):
-        interviewer = self.makeInterviewer()
-        interviewer.askQuestions()
-
+    public void TakeInterview()
+    {
+        Interviewer interviewer = MakeInterviewer();
+        interviewer.AskQuestions();
+    }
+}
 ```
 
 </div>
@@ -303,15 +311,22 @@ class HiringManager:
 در نهایت هر فرزند میتونه ازش ارث بری کنه و متد `makeInterviewer` خودش رو داشته باشه:
 <div dir="ltr">
 
-```python
-class DevelopmentManager(HiringManager):
-    def makeInterviewer(self):
-        return Developer()
+```c#
+class DevelopmentManager : HiringManager
+{
+    public override Interviewer MakeInterviewer()
+    {
+        return new Developer();
+    }
+}
 
-
-class MarketingManager(HiringManager):
-    def makeInterviewer(self):
-        return CommunityExecutive()
+class MarketingManager : HiringManager
+{
+    public override Interviewer MakeInterviewer()
+    {
+        return new CommunityExecutive();
+    }
+}
 ```
 
 </div>
@@ -319,12 +334,12 @@ class MarketingManager(HiringManager):
 و برای استفاده ازش به این صورت عمل می کنیم:
 <div dir="ltr">
 
-```python
-devManager = DevelopmentManager()
-devManager.takeInterview()
+```c#
+DevelopmentManager devManager = new DevelopmentManager();
+devManager.takeInterview();
 
-marketingManager = MarketingManager()
-marketingManager.takeInterview()
+MarketingManager marketingManager = new MarketingManager();
+marketingManager.takeInterview();
 ```
 
 </div>
